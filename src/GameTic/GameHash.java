@@ -38,7 +38,7 @@ public class GameHash {
                     if(column >= 1 && column <=3){
                         validColumn = true;
                     }else{
-                        System.out.println("Invalid Column number ! ");
+                        System.out.println("\u001b[31mInvalid Column number ! \u001b[0m");
                     }
                 }
 
