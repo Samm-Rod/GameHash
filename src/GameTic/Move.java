@@ -4,6 +4,8 @@ public class Move {
     private int line;
     private int column;
 
+
+
     public int getLine() {
         return line;
     }

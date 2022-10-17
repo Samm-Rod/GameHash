@@ -7,12 +7,15 @@ public class TicTacToe {
     private final char[][] gameBoard = new char[3][3];
     private final Player[] players = new Player[2];
     private final Move moves = new Move();
-    private int playerTurn = 0;
+    protected int playerTurn = 0;
+    int p1 = 0,p2 = 0, tied = 0;
+
 
     private void createGameBoard() {
         for (char[] chars : gameBoard) {
             Arrays.fill(chars, ' ');
         }
+
     }
 
     public void startPlaying() {
@@ -21,6 +24,7 @@ public class TicTacToe {
         printGameBoard();
 
         while (!gameBoardFull() && !verifyWinner()) {
+
             registerPlay(players[playerTurn], moves);
 
             if (makePlays(players[playerTurn], moves)) {
@@ -31,35 +35,55 @@ public class TicTacToe {
             }
         }
 
-        if (gameBoardFull()) {
+        if (verifyWinner()) {                   // gameBoardFull()   <--- * --->     verifyWinner()
             Player winner;
             winner = players[(playerTurn + 1) % 2];
-            System.out.println("The player " + winner.getName() + " won, Congratulations.");
-
-        } else {
+            System.out.println("The player " + winner.getName() + " won, Congratulations."); // Winner
+            if(winner.getName() == "A [X]"){
+                p1++;
+            }else if (winner.getName() == "B [O]"){
+                p2++;
+            }
+        }else{
+            tied++;
             System.out.println("No one won !");
         }
 
     }
 
+    protected void contVictories(){
+
+    }
+
+
     private void createPlayer() {
         players[0] = new Player();
-        players[0].setName("A");
+        players[0].setName("A [X]");
         players[0].setSymbol('X');
 
         players[1] = new Player();
-        players[1].setName("B");
+        players[1].setName("B [O]");
         players[1].setSymbol('O');
     }
 
 
     private void registerPlay(Player x, Move move) {
         Scanner sc = new Scanner(System.in);
+        int line = 0, column = 0;
+        System.out.print("Player " + x.getName() + " => Line : ");
+        line = sc.nextInt();
+        if(line >= 1 && line <= 3){
+            line--;
+            move.setLine(line);
+        }
 
-        System.out.println("Player " + x.getName() + " => Line");
-        move.setLine(sc.nextInt());
-        System.out.println("Player " + x.getName() + " => Column");
-        move.setColumn(sc.nextInt());
+        System.out.print("Player " + x.getName() + " => Column : ");
+        column = sc.nextInt();
+        if(column >= 1 && column <=3){
+            column--;
+            move.setColumn(column);
+        }
+
 
     }
 
@@ -73,7 +97,7 @@ public class TicTacToe {
         return true;
     }
 
-    private boolean verifyWinner() {
+    protected boolean verifyWinner() {
         //Diagonal 1
         if (gameBoard[0][0] == gameBoard[1][1] && gameBoard[0][0] == gameBoard[2][2] && gameBoard[0][0] != ' ') {
             return true;
@@ -110,7 +134,7 @@ public class TicTacToe {
         return false;
     }
 
-    private boolean gameBoardFull() {
+    private boolean gameBoardFull() {                       //  !gameBoardFull()  == false
         for (int i = 0; i < gameBoard.length; i++) {
             for (int j = 0; j < gameBoard[i].length; j++) {
                 if (gameBoard[i][j] == ' ') {
@@ -125,7 +149,7 @@ public class TicTacToe {
     public void printGameBoard() {
         for (int i = 0; i < gameBoard.length; i++) {
             for (int j = 0; j < gameBoard[i].length; j++) {
-                if (j <= 1) {
+                if (j <= 1) {                           //      Column in i = 0, i = 1
                     System.out.print(gameBoard[i][j] + " | ");
                 } else {
                     System.out.print(gameBoard[i][j]);
@@ -134,4 +158,15 @@ public class TicTacToe {
             System.out.println();
         }
     }
+
+
+    public void cleanMove(){
+        for (int i = 0; i <= gameBoard.length; i++) {
+            for (int j = 0; j <= gameBoard[i].length; j++) {
+                gameBoard[i][j] = '\u0000';
+                playerTurn = 0;
+            }
+        }
+    }
+
 }
